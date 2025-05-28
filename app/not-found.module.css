@@ -1,0 +1,102 @@
+.container {
+  min-height: 100vh;
+  background: #f6f7fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.content {
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.errorCode {
+  font-size: 6rem;
+  font-weight: 700;
+  color: #222;
+  margin: 0;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #222;
+  margin: 16px 0 12px 0;
+  letter-spacing: 0.01em;
+}
+
+.description {
+  font-size: 1rem;
+  color: #666;
+  margin: 0 0 32px 0;
+  line-height: 1.5;
+}
+
+.mapButton {
+  background: #222;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  padding: 16px 24px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 16px rgba(34, 34, 34, 0.3);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mapButton:hover {
+  background: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(34, 34, 34, 0.4);
+}
+
+.mapButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(34, 34, 34, 0.3);
+}
+
+.mapButton svg {
+  flex-shrink: 0;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .container {
+    padding: 16px;
+  }
+
+  .errorCode {
+    font-size: 4.5rem;
+  }
+
+  .title {
+    font-size: 1.3rem;
+  }
+
+  .description {
+    font-size: 0.95rem;
+    margin-bottom: 28px;
+  }
+
+  .mapButton {
+    padding: 14px 20px;
+    font-size: 1rem;
+    border-radius: 14px;
+  }
+
+  .mapButton svg {
+    width: 18px;
+    height: 18px;
+  }
+}

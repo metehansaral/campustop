@@ -359,6 +359,20 @@ export default function Map() {
 
   return (
     <div className={styles.map_container}>
+      {/* Saatler butonu - sağ üstte */}
+      <div className={styles.scheduleButtonContainer}>
+        <button
+          className={styles.scheduleButton}
+          onClick={() => router.push('/schedule')}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+            <polyline points="12,6 12,12 16,14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          <span>Saatler</span>
+        </button>
+      </div>
+
       {/* Stack'li, animasyonlu hata mesajları */}
       <div style={{
         position: 'fixed',
