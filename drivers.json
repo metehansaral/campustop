@@ -1,0 +1,7 @@
+{
+  "drivers": [
+    { "id": 1, "name": "Ahmet Yılmaz", "driver_number": 4755, "password": "ahmet123", "last_login": "2025-05-15 10:00:00" },
+    { "id": 2, "name": "Mehmet Çelik", "driver_number": 6344, "password": "mehmet123", "last_login": "2025-05-15 10:00:00" },
+    { "id": 3, "name": "Fırat Öztürk", "driver_number": 8733, "password": "firat123", "last_login": "2025-05-15 10:00:00" }
+  ]
+}

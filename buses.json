@@ -1,0 +1,50 @@
+{
+  "MB1": {
+    "lat": 41.0576575,
+    "lng": 28.8193578,
+    "isActive": true,
+    "driverNumber": "6344",
+    "startedAt": "2025-05-16T15:49:43.162Z",
+    "stoppedAt": null
+  },
+  "MB2": {
+    "lat": 41.05756186982737,
+    "lng": 28.819482379418673,
+    "isActive": false,
+    "driverNumber": null,
+    "startedAt": "2025-05-16T13:27:05.074Z",
+    "stoppedAt": "2025-05-16T13:27:06.434Z"
+  },
+  "MG1": {
+    "lat": 40.9653441,
+    "lng": 28.837882,
+    "isActive": true,
+    "driverNumber": "4755",
+    "startedAt": "2025-05-15T21:46:20.177Z",
+    "stoppedAt": null
+  },
+  "MG2": {
+    "lat": null,
+    "lng": null,
+    "isActive": false,
+    "driverNumber": null,
+    "startedAt": null,
+    "stoppedAt": null
+  },
+  "MM": {
+    "lat": null,
+    "lng": null,
+    "isActive": false,
+    "driverNumber": null,
+    "startedAt": null,
+    "stoppedAt": null
+  },
+  "MY": {
+    "lat": null,
+    "lng": null,
+    "isActive": false,
+    "driverNumber": null,
+    "startedAt": null,
+    "stoppedAt": null
+  }
+}

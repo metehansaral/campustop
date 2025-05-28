@@ -1,0 +1,206 @@
+.map_container {
+    background: #f6f7fa;
+}
+
+.modal {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #fff;
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+  box-shadow: 0 -8px 32px 0 rgba(0,0,0,0.10), 0 1.5px 0 #e5e5ea;
+  transition: all 0.4s cubic-bezier(.4,1.2,.6,1);
+  min-height: 60px;
+  max-height: 85vh;
+  z-index: 1001;
+  padding-bottom: env(safe-area-inset-bottom);
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+}
+
+.modalFull {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #fff;
+  border-radius: 0;
+  box-shadow: 0 -2px 24px rgba(0,0,0,0.14);
+  transition: all 0.4s cubic-bezier(.4,1.2,.6,1);
+  z-index: 1001;
+  min-height: 100vh;
+  max-height: 100vh;
+  height: 100vh;
+  padding-bottom: env(safe-area-inset-bottom);
+  overflow: auto;
+}
+
+.overlay {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.18);
+  touch-action: none;
+}
+
+.modalHandle {
+  width: 36px;
+  height: 6px;
+  background: #d1d1d6;
+  border-radius: 3px;
+  margin: 12px auto 18px auto;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+
+.driverProfile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 20px 16px 20px;
+  padding: 10px 0 8px 0;
+  border-bottom: 1px solid #f2f2f7;
+}
+.driverAvatar {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #e0e0e5 60%, #f7f7fa 100%);
+  color: #222;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border: 1.5px solid #e5e5ea;
+}
+.driverName {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #222;
+  letter-spacing: 0.01em;
+}
+.driverCode {
+  font-size: 0.97rem;
+  color: #888;
+  margin-top: 2px;
+  letter-spacing: 0.01em;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.startBtn {
+  background: #fff;
+  color: #27ae60;
+  border: none;
+  border-radius: 22px;
+  padding: 12px 32px;
+  font-size: 1.08rem;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(39,174,96,0.08), 0 1.5px 0 #e5e5ea;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.startBtn:disabled {
+  background: #f2f2f7;
+  color: #b2dfdb;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.stopBtn {
+  background: #fff;
+  color: #e74c3c;
+  border: none;
+  border-radius: 22px;
+  padding: 12px 32px;
+  font-size: 1.08rem;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(231,76,60,0.08), 0 1.5px 0 #e5e5ea;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.stopBtn:disabled {
+  background: #f2f2f7;
+  color: #ffcdd2;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.routeList {
+  padding: 0 18px 18px 18px;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.route, .selectedRoute {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  background: #f7f7fa;
+  border-radius: 16px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  border: 1.5px solid #e5e5ea;
+  transition: border 0.2s, background 0.2s;
+  font-size: 0.98rem;
+  color: #222;
+  font-weight: 500;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  white-space: normal;
+  overflow: visible;
+  text-overflow: initial;
+}
+.selectedRoute {
+  background: #e6f9ed;
+  border: 1.5px solid #27ae60;
+  color: #27ae60;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(39,174,96,0.06);
+}
+
+.routeName {
+  font-weight: 700;
+  font-size: 1.02rem;
+  color: #222;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+.routePath {
+  color: #888;
+  font-size: 0.97rem;
+  overflow: visible;
+  text-overflow: initial;
+  white-space: normal;
+  flex-shrink: 1;
+  word-break: break-word;
+}
+
+.routeList h4 {
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 10px;
+  margin-top: 0;
+  letter-spacing: 0.01em;
+}
