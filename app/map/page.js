@@ -11,10 +11,10 @@ const MapView = dynamic(() => import("./MapView"), { ssr: false });
 
 export default function Map() {
   const router = useRouter();
-  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isDriverLoggedIn, setIsDriverLoggedIn] = useState(false);
   const [buses, setBuses] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const [modalPosition, setModalPosition] = useState(0); // 0: aşağıda, 1: tam ekran
   const [isDriving, setIsDriving] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState(null);
@@ -139,18 +139,20 @@ export default function Map() {
 
   function logout() {
     document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
-
-    setTimeout(() => {
-      router.push("/");
-    }, 500);
+    setIsDriverLoggedIn(false);
+    setShowModal(false);
+    setIsDriving(false);
+    setSelectedRoute(null);
+    setDriverNumber(null);
   }
 
-  // Token kontrolü
+  // Token kontrolü - sadece driver kontrolü için
   useEffect(() => {
     const checkToken = async () => {
       const token = getCookie("token");
       if (!token) {
-        router.push("/");
+        setIsDriverLoggedIn(false);
+        setShowModal(false);
         return;
       }
 
@@ -164,23 +166,27 @@ export default function Map() {
         const data = await res.json();
 
         if (!data.success) {
-          router.push("/");
+          setIsDriverLoggedIn(false);
+          setShowModal(false);
         } else {
-          setIsAuthorized(true);
+          setIsDriverLoggedIn(true);
+          setShowModal(true);
+          // Extract driver number from token
+          const driverNum = token.split('-')[0];
+          setDriverNumber(driverNum);
         }
       } catch (error) {
         console.error("Token kontrolü hatası:", error);
-        router.push("/");
+        setIsDriverLoggedIn(false);
+        setShowModal(false);
       }
     };
 
     checkToken();
-  }, [router]);
+  }, []);
 
-  // Otobüs verisi çek
+  // Otobüs verisi çek - artık authentication gerektirmiyor
   useEffect(() => {
-    if (!isAuthorized) return;
-
     const fetchBuses = async () => {
       try {
         const res = await fetch("/api/bus_location");
@@ -194,11 +200,11 @@ export default function Map() {
     fetchBuses();
     const interval = setInterval(fetchBuses, 2000);
     return () => clearInterval(interval);
-  }, [isAuthorized]);
+  }, []);
 
   // Kullanıcı konumunu al
   useEffect(() => {
-    if (!isAuthorized) return;
+    if (!isDriverLoggedIn) return;
 
     let watchId;
     if (navigator.geolocation) {
@@ -220,16 +226,7 @@ export default function Map() {
         navigator.geolocation.clearWatch(watchId);
       }
     };
-  }, [isAuthorized]);
-
-  useEffect(() => {
-    // Token'dan id'yi al
-    const token = getCookie("token");
-    if (token) {
-      const [id] = token.split("-");
-      setDriverNumber(id);
-    }
-  }, []);
+  }, [isDriverLoggedIn]);
 
   useEffect(() => {
     if (!isDriving || !selectedRoute || !driverNumber) return;
@@ -279,8 +276,6 @@ export default function Map() {
       }
     };
   }, [isDriving, selectedRoute, driverNumber]);
-
-  if (!isAuthorized) return null;
 
   const center = userLocation
     ? [userLocation.lat, userLocation.lng]
@@ -359,74 +354,110 @@ export default function Map() {
 
   return (
     <div className={styles.map_container}>
-      {/* Saatler butonu - sağ üstte */}
+      {/* Header buttons - sağ üstte */}
       <div className={styles.scheduleButtonContainer}>
-        <button
-          className={styles.scheduleButton}
-          onClick={() => router.push('/schedule')}
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-            <polyline points="12,6 12,12 16,14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-          <span>Saatler</span>
-        </button>
+        {/* Saatler butonu - sadece sürücü giriş yapmamışsa görünür */}
+        {!isDriverLoggedIn && (
+          <button
+            className={styles.scheduleButton}
+            onClick={() => router.push('/schedule')}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+              <polyline points="12,6 12,12 16,14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span>Saatler</span>
+          </button>
+        )}
+
+        {/* Sürücü butonu - sadece sürücü giriş yapmamışsa görünür */}
+        {!isDriverLoggedIn && (
+          <button
+            className={styles.driverLoginButton}
+            onClick={() => router.push('/driver-login')}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
+            </svg>
+            <span>Sürücü</span>
+          </button>
+        )}
+
+        {/* Çıkış butonu - sadece sürücü giriş yaptıysa görünür */}
+        {isDriverLoggedIn && (
+          <button
+            className={styles.logoutButton}
+            onClick={logout}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <polyline points="16,17 21,12 16,7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <line x1="21" y1="12" x2="9" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span>Çıkış</span>
+          </button>
+        )}
       </div>
 
-      {/* Stack'li, animasyonlu hata mesajları */}
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        zIndex: 9999,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        pointerEvents: 'none',
-      }}>
-        {errors.map((err, idx) => (
-          <div
-            key={err.id}
-            onTouchStart={e => handleErrorTouchStart(err.id, e)}
-            onTouchMove={e => handleErrorTouchMove(err.id, e)}
-            onTouchEnd={e => handleErrorTouchEnd(err.id, e)}
-            style={{
-              pointerEvents: 'auto',
-              width: 'calc(100% - 32px)',
-              maxWidth: 600,
-              margin: idx === 0 ? '18px auto 0 auto' : '8px auto 0 auto',
-              background: 'rgba(255,255,255,0.45)',
-              color: '#222',
-              padding: '15px 28px',
-              borderRadius: '18px',
-              fontSize: '1.08rem',
-              fontWeight: 500,
-              boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
-              boxSizing: 'border-box',
-              position: 'relative',
-              backdropFilter: 'blur(8px)',
-              WebkitBackdropFilter: 'blur(8px)',
-              border: '1px solid rgba(255,255,255,0.35)',
-              transform: `translateY(${err.dismissed ? '-120%' : (err.deltaY || 0)}px) scale(${err.dismissed ? 0.98 : 1})`,
-              opacity: err.dismissed ? 0 : 1,
-              transition: 'transform 0.38s cubic-bezier(.4,1.2,.6,1), opacity 0.38s cubic-bezier(.4,1.2,.6,1)',
-              userSelect: 'none',
-              touchAction: 'pan-y',
-              cursor: 'grab',
-              WebkitTapHighlightColor: 'transparent',
-            }}
-          >
-            <div style={{display:'flex',alignItems:'center',gap:8,justifyContent:'center'}}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{marginRight:6}}><circle cx="12" cy="12" r="12" fill="#ff4d4d33"/><path d="M12 7v4m0 4h.01" stroke="#ff4d4d" strokeWidth="2" strokeLinecap="round"/></svg>
-              <span>{err.message}</span>
+      {/* Stack'li, animasyonlu hata mesajları - sadece sürücüler için */}
+      {isDriverLoggedIn && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          zIndex: 9999,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          pointerEvents: 'none',
+        }}>
+          {errors.map((err, idx) => (
+            <div
+              key={err.id}
+              onTouchStart={e => handleErrorTouchStart(err.id, e)}
+              onTouchMove={e => handleErrorTouchMove(err.id, e)}
+              onTouchEnd={e => handleErrorTouchEnd(err.id, e)}
+              style={{
+                pointerEvents: 'auto',
+                width: 'calc(100% - 32px)',
+                maxWidth: 600,
+                margin: idx === 0 ? '18px auto 0 auto' : '8px auto 0 auto',
+                background: 'rgba(255,255,255,0.45)',
+                color: '#222',
+                padding: '15px 28px',
+                borderRadius: '18px',
+                fontSize: '1.08rem',
+                fontWeight: 500,
+                boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
+                boxSizing: 'border-box',
+                position: 'relative',
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255,255,255,0.35)',
+                transform: `translateY(${err.dismissed ? '-120%' : (err.deltaY || 0)}px) scale(${err.dismissed ? 0.98 : 1})`,
+                opacity: err.dismissed ? 0 : 1,
+                transition: 'transform 0.38s cubic-bezier(.4,1.2,.6,1), opacity 0.38s cubic-bezier(.4,1.2,.6,1)',
+                userSelect: 'none',
+                touchAction: 'pan-y',
+                cursor: 'grab',
+                WebkitTapHighlightColor: 'transparent',
+              }}
+            >
+              <div style={{display:'flex',alignItems:'center',gap:8,justifyContent:'center'}}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{marginRight:6}}><circle cx="12" cy="12" r="12" fill="#ff4d4d33"/><path d="M12 7v4m0 4h.01" stroke="#ff4d4d" strokeWidth="2" strokeLinecap="round"/></svg>
+                <span>{err.message}</span>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-      <MapView center={center} buses={buses} userLocation={userLocation} showUserPin={!isDriving} />
+          ))}
+        </div>
+      )}
+
+      <MapView center={center} buses={buses} userLocation={userLocation} showUserPin={!isDriving && isDriverLoggedIn} />
+
       {/* Sadece driver için modal */}
-      {showModal && (
+      {showModal && isDriverLoggedIn && (
         <>
           {/* Tam ekran modda arka planı kapatıcı overlay */}
           {modalPosition === 1 && <div className={styles.overlay}></div>}
