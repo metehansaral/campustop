@@ -59,7 +59,7 @@ function RecenterMap({ center }) {
 
 export default function MapView({ center, buses, userLocation, showUserPin = true }) {
   return (
-    <MapContainer center={center} zoom={13} style={{ height: "100vh", width: "100%" }}>
+    <MapContainer center={center} zoom={13} zoomControl={false} style={{ height: "100vh", width: "100%" }}>
       <RecenterMap center={center} />
       <TileLayer
         attribution='&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
