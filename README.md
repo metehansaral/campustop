@@ -1,6 +1,6 @@
-# Shuttle Takip
+# CampuStop
 
-Öğrencilerin ya da kısaca Altınbaş Üniversitesi bünyesindeki herkesin okul servislerini takip edebileceği, basit ve minimal bir web uygulaması.
+CampuStop, üniversite kampüsleri içinde ve çevresinde çalışan servis araçlarını anlık olarak takip etmeyi sağlayan, sade ve kullanıcı dostu bir web uygulamasıdır. Öğrencilerden akademik ve idari personele kadar tüm kampüs bileşenlerinin servislerin konumunu kolayca görüntülemesine, rotaları incelemesine ve tahmini varış sürelerini öğrenmesine olanak tanır. Platform, gereksiz detaylardan arındırılmış minimal tasarımıyla hızlı ve pratik bir kullanım sunar.
 
 ## Kurulum
 
